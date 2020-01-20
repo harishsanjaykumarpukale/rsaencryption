@@ -60,7 +60,7 @@ for(i=2;i<=j;i++)
 return 1; 
 } 
 
-
+//TO COMPUTE ENCRYPTION KEY
 void ce() 
 { 
 int k; 
