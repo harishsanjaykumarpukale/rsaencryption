@@ -4,32 +4,32 @@
 
 typedef struct s2
 {
-    int signum;
-    int *mag;
-    int length;
-} bignum;
+    int sign;
+    int *word;
+    int size;
+} mpint;
 
 int max(int , int);
 
-bignum add(bignum , bignum);
-bignum sub(bignum , bignum);
-bignum mult(bignum , bignum);
-bignum mulbyint(bignum , int);
-bignum mulby10(bignum , int);
-bignum reminder(bignum , bignum);
-int comparemag(bignum , bignum);
+mpint add(mpint , mpint);
+mpint sub(mpint , mpint);
+mpint mult(mpint , mpint);
+mpint mulbyint(mpint , int);
+mpint mulby10(mpint , int);
+mpint reminder(mpint , mpint);
+int compareword(mpint , mpint);
 void bypass(int** , int*);
-bignum *createcopy(bignum *);
-bignum append(bignum , int);
-bignum subnum(bignum , int );
-bignum addmod(bignum , bignum , bignum);
-bignum multmod(bignum, bignum, bignum);
-bignum divby2(bignum);
-bignum expmod(bignum , bignum , bignum);
-bignum genrandom(int);
-bignum inverse(bignum , bignum);
-void copy(bignum* , bignum*);
-void print(bignum );
+mpint *createcopy(mpint *);
+mpint append(mpint , int);
+mpint subnum(mpint , int );
+mpint addmod(mpint , mpint , mpint);
+mpint multmod(mpint, mpint, mpint);
+mpint divby2(mpint);
+mpint expmod(mpint , mpint , mpint);
+mpint genrandom(int);
+mpint inverse(mpint , mpint);
+void copy(mpint* , mpint*);
+void print(mpint );
 
 /**
 * This method is used to find maximum number between two integers.
@@ -44,54 +44,54 @@ int max(int x , int y){
 
 /**
 * This method is used to remove preindexed zero from number.
-* @param mag This is the first paramter to bypass method
+* @param word This is the first paramter to bypass method
 * @param len This is the second parameter to bypass method
 * @return void This function just removes leading zero from number.
 * like 0045454 to 45454
 */
 
-void bypass(int **magg , int *len){
+void bypass(int **wordg , int *len){
     int curr  = 0;
-    int length = *len;
-    int *mag = *magg;
-    while(curr<length && mag[curr]==0)
+    int size = *len;
+    int *word = *wordg;
+    while(curr<size && word[curr]==0)
     curr++;
     
     int i ;
-    for(i = 0 ; (i+curr) < length ; i++ )
-    mag[i] = mag[curr+i];
+    for(i = 0 ; (i+curr) < size ; i++ )
+    word[i] = word[curr+i];
     
-    length = length - curr;
-    *len = length;
-    *magg = mag;
+    size = size - curr;
+    *len = size;
+    *wordg = word;
     
 }
 
 /**
-* This method is used to compare two bignum variable.
-* @param a This is the first paramter to comparemag method
-* @param b This is the second parameter to comparemag method
-* @return int This function compare two bignum variable according to the sign of the variable and return 0,1,-1
-* @return 0:- if both the variable is having signum 0
+* This method is used to compare two mpint variable.
+* @param a This is the first paramter to compareword method
+* @param b This is the second parameter to compareword method
+* @return int This function compare two mpint variable according to the sign of the variable and return 0,1,-1
+* @return 0:- if both the variable is having sign 0
 * @return 1:- if a is greater than b
 * @return -1:- if a is less than b
 */
 
-int comparemag(bignum a , bignum b){
-    if(a.signum==0 && b.signum==0)
+int compareword(mpint a , mpint b){
+    if(a.sign==0 && b.sign==0)
     return 0;
     
-    if(a.length > b.length)
+    if(a.size > b.size)
     return 1;
-    if(b.length > a.length)
+    if(b.size > a.size)
     return -1;
     
     int i = 0;
-    for(i = 0 ; i < a.length ; i++)
+    for(i = 0 ; i < a.size ; i++)
     {
-        if (a.mag[i] > b.mag[i])
+        if (a.word[i] > b.word[i])
         return 1;
-        if (a.mag[i] < b.mag[i])
+        if (a.word[i] < b.word[i])
         return -1;
         
     }
@@ -99,19 +99,19 @@ int comparemag(bignum a , bignum b){
 }
 
 /**
-* This method is used to create copy of one bignum variable to another bignum variable.
+* This method is used to create copy of one mpint variable to another mpint variable.
 * @param x This is the first paramter to createcopy method
-* @return bignum This function creates copy of variable
+* @return mpint This function creates copy of variable
 */
 
-bignum *createcopy(bignum *x){
-    bignum *b = (bignum*)malloc(sizeof(bignum));
-    b->signum = x->signum;
-    b->length = x->length;
-    b->mag = (int*)malloc(sizeof(int)*b->length);
+mpint *createcopy(mpint *x){
+    mpint *b = (mpint*)malloc(sizeof(mpint));
+    b->sign = x->sign;
+    b->size = x->size;
+    b->word = (int*)malloc(sizeof(int)*b->size);
     int i;
-    for(i = 0 ; i < b->length ; i++)
-    b->mag[i]=x->mag[i];
+    for(i = 0 ; i < b->size ; i++)
+    b->word[i]=x->word[i];
     
     return b;
 }
@@ -119,13 +119,13 @@ bignum *createcopy(bignum *x){
 /**
 * This method is used to create structure variable according to the passed value.
 * @param val This is the first paramter to create method
-* @return bignum This function creates structure variable according to the sign of passed value and converts character to integer
+* @return mpint This function creates structure variable according to the sign of passed value and converts character to integer
 */
-bignum str2bignum(char *val){
-    bignum *b = (bignum*)malloc(sizeof(bignum));
+mpint str2mpint(char *val){
+    mpint *b = (mpint*)malloc(sizeof(mpint));
     int sign;
-    int *mag;
-    int length;
+    int *word;
+    int size;
     
     int curr = 0;
     
@@ -140,20 +140,20 @@ bignum str2bignum(char *val){
     while(val[curr]=='0' && curr<strlen(val))
     curr++;
     
-    length = strlen(val) - curr;
+    size = strlen(val) - curr;
     
-    if(length==0)
+    if(size==0)
     sign=0;
     
-    mag = (int*) malloc(sizeof(int)*length);
+    word = (int*) malloc(sizeof(int)*size);
     
     int i , j;
     for(i=0,j=curr ; j<strlen(val) ; i++,j++)
-    mag[i] = val[j]-'0';
+    word[i] = val[j]-'0';
     
-    b->signum = sign;
-    b->mag = mag;
-    b->length = length;
+    b->sign = sign;
+    b->word = word;
+    b->size = size;
     return *b;
 }
 
@@ -161,45 +161,45 @@ bignum str2bignum(char *val){
 * This method is used to add two structure variable according to the sign of the variable.
 * @param a This is the first paramter to add method
 * @param b This is the second paramter to add method
-* @return bignum This function is used to add two structure variable according to the sign.
+* @return mpint This function is used to add two structure variable according to the sign.
 */
 
-bignum add(bignum a , bignum b){
-    if(b.signum==0)
+mpint add(mpint a , mpint b){
+    if(b.sign==0)
     return a;
-    if(a.signum==0)
+    if(a.sign==0)
     return b;
     
-    if(a.signum!=b.signum)
+    if(a.sign!=b.sign)
     return sub(a,b);
     
-    int maxlen = max(a.length , b.length);
-    int lena = a.length;
-    int lenb = b.length;
-    bignum *c = (bignum*)malloc(sizeof(bignum));
+    int maxlen = max(a.size , b.size);
+    int lena = a.size;
+    int lenb = b.size;
+    mpint *c = (mpint*)malloc(sizeof(mpint));
     int sign;
-    int *mag;
-    int length = maxlen+1;
-    mag = (int*)malloc(sizeof(int)*length);
+    int *word;
+    int size = maxlen+1;
+    word = (int*)malloc(sizeof(int)*size);
     
-    int carry = 0, len=length;
+    int carry = 0, len=size;
     while (lena>0 || lenb>0){
         
-        int x = lena>0 ? a.mag[--lena] : 0 ;
-        int y = lenb>0 ? b.mag[--lenb] : 0 ;
+        int x = lena>0 ? a.word[--lena] : 0 ;
+        int y = lenb>0 ? b.word[--lenb] : 0 ;
         int z = (x + y + carry)%10;
         carry = (x + y + carry)/10;
-        mag[--len] = z;
+        word[--len] = z;
         
     }
-    mag[--len]=carry;
+    word[--len]=carry;
     
-    if (mag[0]==0)
-    bypass(&mag , &length);
+    if (word[0]==0)
+    bypass(&word , &size);
     
-    c->mag = mag;
-    c->signum = a.signum;
-    c->length = length;
+    c->word = word;
+    c->sign = a.sign;
+    c->size = size;
     return *c;
 }
 
@@ -207,48 +207,48 @@ bignum add(bignum a , bignum b){
 * This method is used to substract two structure variable according to the sign of the variable.
 * @param a This is the first paramter to sub method
 * @param b This is the second paramter to sub method
-* @return bignum This function is used to substract two structure variable according to the sign.
+* @return mpint This function is used to substract two structure variable according to the sign.
 */
-bignum sub(bignum a , bignum b){
+mpint sub(mpint a , mpint b){
     
-    if(b.signum==0)
+    if(b.sign==0)
     return a;
     
-    b.signum = b.signum == -1 ? 1:-1 ;
+    b.sign = b.sign == -1 ? 1:-1 ;
     
-    if(a.signum==0){
+    if(a.sign==0){
         return b;
     }
     
-    if(a.signum==b.signum){
+    if(a.sign==b.sign){
         return add(a,b);
     }
     
-    bignum *c = (bignum*) malloc (sizeof(bignum));
-    int length = 0;
-    int *mag ;
-    int signum = 0;
-    if(comparemag(a,b)==0){
-        c->signum=0;
-        c->mag = mag;
-        c->length=0;
+    mpint *c = (mpint*) malloc (sizeof(mpint));
+    int size = 0;
+    int *word ;
+    int sign = 0;
+    if(compareword(a,b)==0){
+        c->sign=0;
+        c->word = word;
+        c->size=0;
         return *c;
     }
     
-    bignum x , y ;
-    x = comparemag(a,b)==1 ? a:b;
-    y = comparemag(a,b)==1 ? b:a;
-    length = max(a.length , b.length);
-    mag = (int*)malloc(sizeof(int)*length);
-    int len = length;
+    mpint x , y ;
+    x = compareword(a,b)==1 ? a:b;
+    y = compareword(a,b)==1 ? b:a;
+    size = max(a.size , b.size);
+    word = (int*)malloc(sizeof(int)*size);
+    int len = size;
     
-    int lenx = x.length;
-    int leny = y.length;
+    int lenx = x.size;
+    int leny = y.size;
     
     int borrow = 0;
     while(lenx>0 || leny>0){
-        int a = lenx>0 ? x.mag[--lenx] : 0;
-        int b = leny>0 ? y.mag[--leny] : 0;
+        int a = lenx>0 ? x.word[--lenx] : 0;
+        int b = leny>0 ? y.word[--leny] : 0;
         int c;
         if ( (a-borrow-b)>=0 ){
             c = (a-borrow-b); borrow=0;
@@ -257,12 +257,12 @@ bignum sub(bignum a , bignum b){
             c = 10+(a-borrow-b) ; borrow=1;
         }
         
-        mag[--len] = c;
+        word[--len] = c;
     }
-    c->mag = mag;
-    c->length = length;
-    c->signum = x.signum;
-    bypass(&c->mag, &c->length);
+    c->word = word;
+    c->size = size;
+    c->sign = x.sign;
+    bypass(&c->word, &c->size);
     return *c;
 }
 
@@ -270,23 +270,23 @@ bignum sub(bignum a , bignum b){
 * This method is used to multiply structure variable with 10 based on the times.
 * @param a This is the first paramter to mulby10 method
 * @param times This is the second paramter to mulby10 method
-* @return bignum This function is used to multiply structure variable by 10 according to the times.
+* @return mpint This function is used to multiply structure variable by 10 according to the times.
 * @like a=18 and times =2 result= 1800
 */
-bignum mulby10(bignum a, int times){
-    bignum *c = (bignum*)malloc(sizeof(bignum));
-    int *mag = (int*)malloc(sizeof(int)*(a.length+times));
-    int len = a.length+times;
+mpint mulby10(mpint a, int times){
+    mpint *c = (mpint*)malloc(sizeof(mpint));
+    int *word = (int*)malloc(sizeof(int)*(a.size+times));
+    int len = a.size+times;
     int i = 0;
-    for(i = 0 ; i < a.length ; i++)
-    mag[i] = a.mag[i];
+    for(i = 0 ; i < a.size ; i++)
+    word[i] = a.word[i];
     
     while(times--)
-    mag[i++] = 0;
+    word[i++] = 0;
     
-    c->mag = mag;
-    c->length = len;
-    c->signum = a.signum;
+    c->word = word;
+    c->size = len;
+    c->sign = a.sign;
     return *c;
     
 }
@@ -295,34 +295,34 @@ bignum mulby10(bignum a, int times){
 * This method is used to multiply structure variable with integer variable.
 * @param a This is the first paramter to mulbyint method
 * @param x This is the second paramter to mulbyint method
-* @return bignum This function is used to multiply structure variable by passed integer variable.
+* @return mpint This function is used to multiply structure variable by passed integer variable.
 */
 
-bignum mulbyint(bignum a , int x){
-    bignum *b = (bignum*)malloc(sizeof(bignum));
+mpint mulbyint(mpint a , int x){
+    mpint *b = (mpint*)malloc(sizeof(mpint));
     if(x==0){
-        b->signum=0;
-        b->length=0;
+        b->sign=0;
+        b->size=0;
         return *b;
     }
     
-    int *mag = (int*)malloc(sizeof(int)*(a.length+1));
-    int len = a.length;
+    int *word = (int*)malloc(sizeof(int)*(a.size+1));
+    int len = a.size;
     
     int carry=0 , i ;
     
     for(i = len ; i>0 ; i--){
-        int m = a.mag[i-1]*x + carry ;
+        int m = a.word[i-1]*x + carry ;
         carry = m/10;
         m = m%10;
-        mag[i]=m;
+        word[i]=m;
     }
     
-    mag[0]=carry;
-    b->mag=mag;
-    b->length = a.length+1;
-    b->signum = a.signum;
-    bypass(&b->mag,&b->length);
+    word[0]=carry;
+    b->word=word;
+    b->size = a.size+1;
+    b->sign = a.sign;
+    bypass(&b->word,&b->size);
     return *b;
 }
 
@@ -330,22 +330,22 @@ bignum mulbyint(bignum a , int x){
 * This method is used to multiply two structure variable.
 * @param a This is the first paramter to mul method
 * @param b This is the second paramter to mul method
-* @return bignum This function is used to multiply two structure variable.
+* @return mpint This function is used to multiply two structure variable.
 */
-bignum mult(bignum a , bignum b){
-    if(a.signum==0)
+mpint mult(mpint a , mpint b){
+    if(a.sign==0)
     return a;
-    if(b.signum==0)
+    if(b.sign==0)
     return b;
     
-    bignum *x = (bignum*)malloc(sizeof(bignum));
+    mpint *x = (mpint*)malloc(sizeof(mpint));
     int i = 0;
-    for(i = 0 ; i < b.length ; i++){
-        bignum c = mulbyint(a,b.mag[i]);
-        c = mulby10(c,b.length-i-1);
+    for(i = 0 ; i < b.size ; i++){
+        mpint c = mulbyint(a,b.word[i]);
+        c = mulby10(c,b.size-i-1);
         *x = add(*x,c);
     }
-    bypass(&x->mag, &x->length);
+    bypass(&x->word, &x->size);
     return *x;
     
 }
@@ -354,58 +354,58 @@ bignum mult(bignum a , bignum b){
 * This method is used to append one integer value to structure variable.
 * @param b This is the first paramter to append method
 * @param x This is the second paramter to append method
-* @return bignum This function is used to append integer value to bignum variable.
+* @return mpint This function is used to append integer value to mpint variable.
 */
-bignum append(bignum b , int x){
+mpint append(mpint b , int x){
     
-    int *mag = (int*)malloc(sizeof(int)*(b.length+1));
+    int *word = (int*)malloc(sizeof(int)*(b.size+1));
     int i;
-    for(i = 0 ; i < b.length ; i++)
-    mag[i] = b.mag[i];
-    mag[i] = x;
-    b.length++;
-    free(b.mag);
-    b.mag = mag;
+    for(i = 0 ; i < b.size ; i++)
+    word[i] = b.word[i];
+    word[i] = x;
+    b.size++;
+    free(b.word);
+    b.word = word;
     return b;
     
 }
 
 /**
-* This method is used to keep l length value in bignum variable.
+* This method is used to keep l size value in mpint variable.
 * @param a This is the first paramter to subnum method
 * @param l This is the second paramter to subnum method
-* @return bignum here in this function l is the length which we have to keep in bignum variable
-*  and the remaining part we have to remove from bignum.
+* @return mpint here in this function l is the size which we have to keep in mpint variable
+*  and the remaining part we have to remove from mpint.
 */
-bignum subnum(bignum a , int l){
-    bignum *c = (bignum*)malloc(sizeof(bignum));
-    c->length = l;
-    c->signum = a.signum;
-    c->mag = (int*) malloc(sizeof(int)*l);
+mpint subnum(mpint a , int l){
+    mpint *c = (mpint*)malloc(sizeof(mpint));
+    c->size = l;
+    c->sign = a.sign;
+    c->word = (int*) malloc(sizeof(int)*l);
     int i;
     for(i = 0 ; i < l ; i++)
-    c->mag[i] = a.mag[i];
+    c->word[i] = a.word[i];
     return *c;
 }
 
 /**
-* This method is used to get divident from bignum divisor and bignum div
+* This method is used to get divident from mpint divisor and mpint div
 * @param divisor This is the first paramter to divident method
 * @param div This is the second paramter to divident method
-* @return bignum this function used to divide two bignum variable
+* @return mpint this function used to divide two mpint variable
 */
-bignum divident(bignum divisor , bignum div ){
+mpint divident(mpint divisor , mpint div ){
     
-    bignum l = str2bignum("1");
-    bignum h = *createcopy(&divisor);
-    bignum rem = reminder(divisor , div);
+    mpint l = str2mpint("1");
+    mpint h = *createcopy(&divisor);
+    mpint rem = reminder(divisor , div);
     divisor = sub(divisor,rem);
-    bignum ONE = str2bignum("1");
+    mpint ONE = str2mpint("1");
     
     while(1){
-        bignum mid = divby2(add(l,h));
-        bignum tmp = mult(div , mid);
-        int cmp = comparemag( divisor , tmp ) ;
+        mpint mid = divby2(add(l,h));
+        mpint tmp = mult(div , mid);
+        int cmp = compareword( divisor , tmp ) ;
         if (cmp==0)
         return mid;
         else if ( cmp == 1)
@@ -417,90 +417,90 @@ bignum divident(bignum divisor , bignum div ){
 }
 
 /**
-* This method is used to get reminder from bignum
+* This method is used to get reminder from mpint
 * @param a This is the first paramter to reminder method
 * @param b This is the second paramter to reminder method
-* @return bignum this function used to get reminder from two bignum variable
+* @return mpint this function used to get reminder from two mpint variable
 */
 
-bignum reminder(bignum a , bignum b){
+mpint reminder(mpint a , mpint b){
     
     
-    if(b.signum==0)
+    if(b.sign==0)
     {
         printf("Exception case of 0 divisorn");
         exit(0);
     }
-    if(a.signum==0)
+    if(a.sign==0)
     {
         return a;
     }
     
-    if (comparemag(a,b)==-1){
+    if (compareword(a,b)==-1){
         
         return a;
     }
-    if(comparemag(a,b)==0){
+    if(compareword(a,b)==0){
         
-        bignum *c = (bignum*)malloc(sizeof(bignum));
-        c->length=0;
-        c->signum =  0 ;
+        mpint *c = (mpint*)malloc(sizeof(mpint));
+        c->size=0;
+        c->sign =  0 ;
         
         return *c;
     }
     
-    int len = b.length;
+    int len = b.size;
     
-    bignum t=  subnum(a,len);
-    while(comparemag(t,b)==-1){
+    mpint t=  subnum(a,len);
+    while(compareword(t,b)==-1){
         len++;
         t = subnum(a,len);
     }
-    int appendzeroes = a.length - len ;
+    int appendzeroes = a.size - len ;
     t = mulby10(b , appendzeroes);
     a = sub(a,t);
     return reminder(a,b);
 }
 
 /**
-* This method is used to divide bignum by 2
+* This method is used to divide mpint by 2
 * @param a This is the first paramter to reminder method
-* @return bignum this function used to divide bignum by 2
+* @return mpint this function used to divide mpint by 2
 */
-bignum divby2(bignum a){
-    bignum *c = (bignum*)malloc(sizeof(bignum));
+mpint divby2(mpint a){
+    mpint *c = (mpint*)malloc(sizeof(mpint));
     
-    int len = a.length;
-    int *mag = (int*)malloc(sizeof(int)*len);
-    int signum = a.signum;
+    int len = a.size;
+    int *word = (int*)malloc(sizeof(int)*len);
+    int sign = a.sign;
     int carry = 0;
     int i;
     for(i = 0 ; i < len ; i++){
-        int x = carry*10 + a.mag[i];
+        int x = carry*10 + a.word[i];
         int v = x/2;
         carry = x%2;
-        mag[i]=v;
+        word[i]=v;
     }
-    c->mag = mag;
-    c->signum = signum;
-    c->length = len;
-    bypass(&c->mag , &c->length);
+    c->word = word;
+    c->sign = sign;
+    c->size = len;
+    bypass(&c->word , &c->size);
     return *c;
 }
 
 /**
-* This method is used to get mod of bignum by 2
+* This method is used to get mod of mpint by 2
 * @param a This is the first paramter to mod2 method
-* @return int this function used to get mod of 2 of a bignum variable
+* @return int this function used to get mod of 2 of a mpint variable
 */
-int mod2(bignum a){
+int mod2(mpint a){
     
-    int len = a.length;
-    int signum = a.signum;
+    int len = a.size;
+    int sign = a.sign;
     int carry = 0;
     int i;
     for(i = 0 ; i < len ; i++){
-        int x = carry*10 + a.mag[i];
+        int x = carry*10 + a.word[i];
         carry = x%2;
     }
     return carry;
@@ -511,21 +511,21 @@ int mod2(bignum a){
 * @param m This is the first paramter to expmod method
 * @param e This is the second paramter to expmod method
 * @param n This is the third paramter to expmod method
-* @return bignum this function used to get exponent mod by the efficient way
+* @return mpint this function used to get exponent mod by the efficient way
 */
-bignum expmod(bignum m , bignum e , bignum n){
-    bignum ZERO = str2bignum("0");
-    bignum ONE = str2bignum("1");
+mpint expmod(mpint m , mpint e , mpint n){
+    mpint ZERO = str2mpint("0");
+    mpint ONE = str2mpint("1");
     
-    if(comparemag(e,ONE)==0)
+    if(compareword(e,ONE)==0)
     return m;
-    if(comparemag(e,ZERO)==0)
+    if(compareword(e,ZERO)==0)
     return ONE;
     
     int r = mod2(e);
     e = divby2(e);
     
-    bignum tmp = expmod(m , e , n);
+    mpint tmp = expmod(m , e , n);
     tmp = multmod(tmp,tmp,n);
     
     if(r==1)
@@ -537,24 +537,24 @@ bignum expmod(bignum m , bignum e , bignum n){
 /**
 * This method is used to generate random number based on bits size
 * @param bits This is the first paramter to genrandom method
-* @return bignum this function used to generate random number based on bit size.
+* @return mpint this function used to generate random number based on bit size.
 */
-bignum genrandom(int bits){
+mpint genrandom(int bits){
     
-    bignum TWO = str2bignum("2");
-    bignum ONE = str2bignum("1");
-    bignum ZERO = str2bignum("0");
-    bignum pow2 = str2bignum("0");
+    mpint TWO = str2mpint("2");
+    mpint ONE = str2mpint("1");
+    mpint ZERO = str2mpint("0");
+    mpint pow2 = str2mpint("0");
     
-    bignum sum = str2bignum("0");
+    mpint sum = str2mpint("0");
     while(bits--)
     {
         int bit = rand()%2;
         
-        if(comparemag(pow2,ZERO)==0)
+        if(compareword(pow2,ZERO)==0)
         pow2=ONE;
         
-        else if(comparemag(pow2,ONE)==0)
+        else if(compareword(pow2,ONE)==0)
         pow2=TWO;
         
         else pow2 = mult(pow2,TWO);
@@ -569,23 +569,23 @@ bignum genrandom(int bits){
 }
 
 /**
-* This method is used to return 0 or 1 based on the bignum p is prime or not
+* This method is used to return 0 or 1 based on the mpint p is prime or not
 * @param p This is the first paramter to millerrabin method
 * @param it This is the second paramter to millerrabin method
-* @return int from this function checking the bignum p is prime or not according to the it which is the accuracy of the test
+* @return int from this function checking the mpint p is prime or not according to the it which is the accuracy of the test
 */
-int millerrabin(bignum p, int it){
+int millerrabin(mpint p, int it){
     
-    bignum TWO = str2bignum("2");
-    bignum ONE = str2bignum("1");
+    mpint TWO = str2mpint("2");
+    mpint ONE = str2mpint("1");
     
-    if(comparemag(p, TWO)==-1)
+    if(compareword(p, TWO)==-1)
     return 0;
     
-    if( ( comparemag(p,TWO)==0 ) || ( mod2(p)==0 ) )
+    if( ( compareword(p,TWO)==0 ) || ( mod2(p)==0 ) )
     return 0;
     
-    bignum d = sub(p,ONE);
+    mpint d = sub(p,ONE);
     int s=0;
     while(mod2(d)==0){
         d = divby2(d);
@@ -593,16 +593,16 @@ int millerrabin(bignum p, int it){
     }
     
     witnessloop: do{
-        bignum a = add(reminder( genrandom(100) , sub(p,str2bignum("4")) ), TWO);
-        bignum x = expmod(a , d , p);
-        if( (comparemag(x , ONE)==0) || ( comparemag(x, sub(p,ONE))==0 ))
+        mpint a = add(reminder( genrandom(100) , sub(p,str2mpint("4")) ), TWO);
+        mpint x = expmod(a , d , p);
+        if( (compareword(x , ONE)==0) || ( compareword(x, sub(p,ONE))==0 ))
         continue;
         int i;
         for(i = 0 ; i < s-1 ; i++){
             x = multmod(x,x,p);
-            if(comparemag(x,ONE)==0)
+            if(compareword(x,ONE)==0)
             return 0;
-            if(comparemag(x,sub(p,ONE))==0)
+            if(compareword(x,sub(p,ONE))==0)
             goto witnessloop;
         }
         return 0;
@@ -612,35 +612,35 @@ int millerrabin(bignum p, int it){
 }
 
 /**
-* This method is used to convert bignum variable to long long integer
+* This method is used to convert mpint variable to long long integer
 * @param b This is the first paramter to to_int method
-* @return long long int from this function just converting bignum variable to long int
+* @return long long int from this function just converting mpint variable to long int
 */
-long long int to_int(bignum b){
+long long int to_int(mpint b){
     long long int sum = 0;
     int i ;
-    for (i = 0; i < b.length ; ++i)
+    for (i = 0; i < b.size ; ++i)
     {
-        sum = sum*10 + b.mag[i] ;
+        sum = sum*10 + b.word[i] ;
     }
     return sum;
 }
 
 /**
 * @param len This is the first paramter to genrandomprime method
-* @return bignum this function is used to generate random prime number based on the given length
+* @return mpint this function is used to generate random prime number based on the given size
 */
-bignum genrandomprime(int len){
-    bignum PRIME_PRODUCT = str2bignum("152125131763605");
-    bignum ONE = str2bignum("1");
-    bignum TWO = str2bignum("2");
-    bignum ran = genrandom(len);
+mpint genrandomprime(int len){
+    mpint PRIME_PRODUCT = str2mpint("152125131763605");
+    mpint ONE = str2mpint("1");
+    mpint TWO = str2mpint("2");
+    mpint ran = genrandom(len);
     
     if(mod2(ran)==0)
     ran = add(ran,ONE);
     
     while(1){
-        bignum rem = reminder(ran ,PRIME_PRODUCT);
+        mpint rem = reminder(ran ,PRIME_PRODUCT);
         long long int r = to_int(rem);
         if ((r%3==0)  || (r%5==0)  || (r%7==0)  || (r%11==0) ||
         (r%13==0) || (r%17==0) || (r%19==0) || (r%23==0) ||
@@ -663,9 +663,9 @@ bignum genrandomprime(int len){
 * @param a This is the first paramter to addmod method
 * @param b This is the second paramter to addmod method
 * @param n This is the third paramter to addmod method
-* @return bignum
+* @return mpint
 */
-bignum addmod(bignum a , bignum b , bignum n)
+mpint addmod(mpint a , mpint b , mpint n)
 {
     return reminder(add(a,b),n);
 }
@@ -675,43 +675,43 @@ bignum addmod(bignum a , bignum b , bignum n)
 * @param a This is the first paramter to multmod method
 * @param b This is the second paramter to multmod method
 * @param n This is the third paramter to multmod method
-* @return bignum
+* @return mpint
 */
-bignum multmod(bignum a, bignum b, bignum n){
+mpint multmod(mpint a, mpint b, mpint n){
     return reminder(mult(a,b),n);
 }
 
 /**
-* print method to print any bignum variable
+* print method to print any mpint variable
 * @param c This is the first paramter to print method
 * @return void
 */
-void print(bignum c){
+void print(mpint c){
     int i , j , k;
-    if(c.signum==-1)
+    if(c.sign==-1)
     printf("-" );
-    if(c.signum==0)
+    if(c.sign==0)
     printf("0");
-    for(i = 0 ; i < c.length ; i++)
-    printf("%d",c.mag[i] );
+    for(i = 0 ; i < c.size ; i++)
+    printf("%d",c.word[i] );
     
     printf("n");
 }
 
 /**
-* This method is used to get co-prime of two bignum variable
+* This method is used to get co-prime of two mpint variable
 * @param a This is the first paramter to multmod method
 * @param b This is the second paramter to multmod method
 * @return int either 0 or 1
 */
-int coprime(bignum a , bignum b){
-    while(b.signum!=0){
-        bignum t = b;
+int coprime(mpint a , mpint b){
+    while(b.sign!=0){
+        mpint t = b;
         b = reminder(a,b);
         a = t;
     }
-    bignum ONE = str2bignum("1");
-    if (comparemag(a,ONE)==0)
+    mpint ONE = str2mpint("1");
+    if (compareword(a,ONE)==0)
     return 1;
     else
     return 0;
@@ -722,15 +722,15 @@ int coprime(bignum a , bignum b){
 * @param n This is the first paramter to keygen method
 * @param e This is the second paramter to keygen method
 * @param d This is the third paramter to keygen method
-* @param length This is the fourth paramter to keygen method
+* @param size This is the fourth paramter to keygen method
 * @return void
 */
-void keygen(bignum *n,bignum *e, bignum *d,int length){
-    bignum ONE = str2bignum("1");
-    bignum p = genrandomprime(length/2);
-    bignum q = genrandomprime(length/2);
+void keygen(mpint *n,mpint *e, mpint *d,int size){
+    mpint ONE = str2mpint("1");
+    mpint p = genrandomprime(size/2);
+    mpint q = genrandomprime(size/2);
     *n = mult(p,q);
-    bignum phi = mult(sub(p,ONE), sub(q,ONE));
+    mpint phi = mult(sub(p,ONE), sub(q,ONE));
     do{
         *e = reminder(genrandom(256),phi);
     }while( coprime (phi,*e)!=1);
@@ -739,19 +739,19 @@ void keygen(bignum *n,bignum *e, bignum *d,int length){
 }
 
 /**
-* This method is used to copy one bignum to another bignum
+* This method is used to copy one mpint to another mpint
 * @param to This is the first paramter to copy method
 * @param from This is the second paramter to copy method
 * @return void
 */
-void copy(bignum *to , bignum *from){
-    to->length = from->length;
-    to->signum = from->signum;
-    free(to->mag);
-    to->mag = (int*)malloc(sizeof(int)*to->length);
+void copy(mpint *to , mpint *from){
+    to->size = from->size;
+    to->sign = from->sign;
+    free(to->word);
+    to->word = (int*)malloc(sizeof(int)*to->size);
     int i;
-    for(i = 0 ; i < to->length ; i++)
-    to->mag[i] = from->mag[i];
+    for(i = 0 ; i < to->size ; i++)
+    to->word[i] = from->word[i];
     
 }
 
@@ -759,25 +759,25 @@ void copy(bignum *to , bignum *from){
 * This method is used to inverse of a such that a * inverse(a) = 1 mod(n)
 * @param a This is the first paramter to inverse method
 * @param n This is the second paramter to inverse method
-* @return bignum
+* @return mpint
 */
-bignum inverse(bignum a , bignum n){
-    bignum ONE = str2bignum("1");
-    bignum ZERO = str2bignum("0");
-    bignum t = str2bignum("0");
-    bignum newt = str2bignum("1");
-    bignum newn = *createcopy(&n);
-    bignum newa = *createcopy(&a);
+mpint inverse(mpint a , mpint n){
+    mpint ONE = str2mpint("1");
+    mpint ZERO = str2mpint("0");
+    mpint t = str2mpint("0");
+    mpint newt = str2mpint("1");
+    mpint newn = *createcopy(&n);
+    mpint newa = *createcopy(&a);
     
-    bignum p_i_2 = str2bignum("0");
-    bignum p_i_1 = str2bignum("1");
+    mpint p_i_2 = str2mpint("0");
+    mpint p_i_1 = str2mpint("1");
     do{
-        bignum q_i_2 = divident(newn , newa);
-        bignum rem = reminder(newn , newa);
-        bignum p = sub(p_i_2 , reminder( mult(p_i_1,q_i_2), n));
-        if(p.signum==-1){
-            p.signum = 1;
-            bignum tmp = sub( n , p);
+        mpint q_i_2 = divident(newn , newa);
+        mpint rem = reminder(newn , newa);
+        mpint p = sub(p_i_2 , reminder( mult(p_i_1,q_i_2), n));
+        if(p.sign==-1){
+            p.sign = 1;
+            mpint tmp = sub( n , p);
             copy(&p , &tmp);
             
         }
@@ -786,7 +786,7 @@ bignum inverse(bignum a , bignum n){
         copy(&p_i_1 , &p );
         copy(&newn ,&newa );
         copy(&newa , &rem);
-        if(comparemag(rem,ONE)==0)
+        if(compareword(rem,ONE)==0)
         return p;
     }while(1);
 }
@@ -796,9 +796,9 @@ bignum inverse(bignum a , bignum n){
 * @param m This is the first paramter to RSAEncrypt method
 * @param e This is the second paramter to RSAEncrypt method
 * @param n This is the third paramter to RSAEncrypt method
-* @return bignum
+* @return mpint
 */
-bignum RSAEncrypt(bignum m , bignum e , bignum n){
+mpint RSAEncrypt(mpint m , mpint e , mpint n){
     return expmod(m , e, n);
 }
 
@@ -807,9 +807,9 @@ bignum RSAEncrypt(bignum m , bignum e , bignum n){
 * @param c This is the first paramter to RSADecrypt method
 * @param d This is the second paramter to RSADecrypt method
 * @param n This is the third paramter to RSADecrypt method
-* @return bignum
+* @return mpint
 */
-bignum RSADecrypt(bignum c , bignum d , bignum n){
+mpint RSADecrypt(mpint c , mpint d , mpint n){
     return expmod(c , d, n);
 }
 
@@ -817,14 +817,14 @@ bignum RSADecrypt(bignum c , bignum d , bignum n){
 /**
 * testRSA is used to generate public and private key and then generating the random message
 * and then encrypt and decrypt that generated random message
-* @param length This is the first paramter to testRSA method
+* @param size This is the first paramter to testRSA method
 * @return void
 */
 
-void testRSA(int length){
-    bignum n , e , d ;
+void testRSA(int size){
+    mpint n , e , d ;
     printf("generating primes P and Qn");
-    keygen(&n , &e , &d, length);
+    keygen(&n , &e , &d, size);
     
     printf("nnValue of public key (e , n ) n");
     print(e);
@@ -833,13 +833,13 @@ void testRSA(int length){
     print(d);
     print(n);
     
-    //bignum message = reminder(genrandom(512),n);
-    bignum message = str2bignum("123456789");
+    //mpint message = reminder(genrandom(512),n);
+    mpint message = str2mpint("123456789");
     
     printf("nnRandom generated messege n");
     print(message);
     
-    bignum cipher=RSAEncrypt(message , e , n);
+    mpint cipher=RSAEncrypt(message , e , n);
     printf("nnCipher text n");
     print(cipher);
     
