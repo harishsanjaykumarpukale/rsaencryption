@@ -13,7 +13,7 @@ int max(int , int);
 
 mpint add(mpint , mpint);
 mpint sub(mpint , mpint);
-mpint mult(mpint , mpint);
+mpint mult(mpint , mpint);   
 mpint mulbyint(mpint , int);
 mpint mulby10(mpint , int);
 mpint reminder(mpint , mpint);
