@@ -11,10 +11,10 @@ typedef struct s2
 
 int max(int , int);  
 mpint add(mpint , mpint);  // checked
-void bypass(int** , int*);
-int compareword(mpint , mpint);
-mpint *createcopy(mpint *);
-mpint str2mpint(char *val);
+void bypass(int** , int*); //checked
+int compareword(mpint , mpint); //checked
+mpint *createcopy(mpint *); //checked
+mpint str2mpint(char *val); //checked
 mpint sub(mpint , mpint);  
 mpint mult(mpint , mpint);
 mpint mulbyint(mpint , int);
@@ -115,7 +115,7 @@ int compareword(mpint a , mpint b){
 * @return mpint This function creates copy of variable
 */
 
-mpint *createcopy(mpint *x){
+mpint* createcopy(mpint *x){
     mpint *b = (mpint*)malloc(sizeof(mpint));
     b->sign = x->sign;
     b->size = x->size;

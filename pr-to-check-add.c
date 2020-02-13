@@ -201,15 +201,50 @@ mpint str2mpint(char *val){
     return *b;
 }
 
+mpint* createcopy(mpint *x){
+    mpint *b = (mpint*)malloc(sizeof(mpint));
+    b->sign = x->sign;
+    b->size = x->size;
+    b->word = (int*)malloc(sizeof(int)*b->size);
+    int i;
+    for(i = 0 ; i < b->size ; i++)
+    b->word[i]=x->word[i];
+
+    return b;
+}
+
+
 void main(){
 	int i;
-	mpint f,g,h;
+	mpint f,g,h,*x,y;
 	f=str2mpint("1122");
 	g=str2mpint("2211");
 	h=add(g,f);
-	
 
+	printf("\nadd");
 	print(h);
+
+	printf("Add checked \n");
+
+	f=str2mpint("00011123");
+	bypass(&f.word,&f.size);
+	print(f);
+
+	 printf("\nBYpass checked \n");
+	if(compareword(f,g)==1)
+		printf("\nF is Greater than G \n");
+	else
+		printf("\nG is Greater than F \n");
+
+	 printf("\nCompare word checked \n");
+
+	 y=str2mpint("12345678");
+
+	 x=createcopy(&y);
+	 print(*x);
+
+
+
 
 }
 
