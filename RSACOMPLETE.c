@@ -9,27 +9,38 @@ typedef struct s2
     int size;
 } mpint;
 
-int max(int , int);
-
+int max(int , int);  
 mpint add(mpint , mpint);  // checked
+void bypass(int** , int*);
+int compareword(mpint , mpint);
+mpint *createcopy(mpint *);
+mpint str2mpint(char *val);
 mpint sub(mpint , mpint);  
 mpint mult(mpint , mpint);
 mpint mulbyint(mpint , int);
 mpint mulby10(mpint , int);
-mpint reminder(mpint , mpint);
-int compareword(mpint , mpint);
-void bypass(int** , int*);  
-mpint *createcopy(mpint *);
+int millerrabin(mpint p, int it);
+long long int to_int(mpint b);
+mpint reminder(mpint , mpint); 
 mpint append(mpint , int);
 mpint subnum(mpint , int );
 mpint addmod(mpint , mpint , mpint);
 mpint multmod(mpint, mpint, mpint);
 mpint divby2(mpint);
+mpint divident(mpint divisor , mpint div );
+int mod2(mpint a);
 mpint expmod(mpint , mpint , mpint);
 mpint genrandom(int);
+mpint genrandomprime(int len);
+int coprime(mpint a , mpint b);
+void keygen(mpint *n,mpint *e, mpint *d,int size);
 mpint inverse(mpint , mpint);
 void copy(mpint* , mpint*); 
 void print(mpint );  // checked
+
+mpint RSAEncrypt(mpint m , mpint e , mpint n);
+mpint RSADecrypt(mpint c , mpint d , mpint n);
+void testRSA(int size);
 
 /**
 * This method is used to find maximum number between two integers.
@@ -855,3 +866,4 @@ int main(){
     
     return 0;
 }
+
