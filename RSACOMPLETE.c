@@ -39,7 +39,7 @@ void print(mpint );
 */
 
 int max(int x , int y){
-    return x > y ? x : y ;
+    return x > y ? x : y ;         //checked
 }
 
 /**
@@ -87,7 +87,7 @@ int compareword(mpint a , mpint b){
     return -1;
     
     int i = 0;
-    for(i = 0 ; i < a.size ; i++)
+    for(i = 0 ; i < a.size ; i++)        //checked
     {
         if (a.word[i] > b.word[i])
         return 1;
@@ -121,35 +121,38 @@ mpint *createcopy(mpint *x){
 * @param val This is the first paramter to create method
 * @return mpint This function creates structure variable according to the sign of passed value and converts character to integer
 */
+
+
+//checked
 mpint str2mpint(char *val){
-    mpint *b = (mpint*)malloc(sizeof(mpint));
+    mpint *b = (mpint*)malloc(sizeof(mpint));   //pointer of type mpint
     int sign;
-    int *word;
+    int *word;                                 // memebers of type mpint
     int size;
     
-    int curr = 0;
+    int curr = 0;                                   //counter
     
     if (val[0]=='-')
-    sign=-1;
+    sign=-1;                               // checking the first character of char array for the sign
     else
     sign=1;
     
     if(val[0]=='-' || val[0]=='+')
-    curr++;
+    curr++;                                 //because sign is already stored in "sign"
     
     while(val[curr]=='0' && curr<strlen(val))
-    curr++;
+    curr++;                                     //no need space for preceding zeroes if any given
     
     size = strlen(val) - curr;
     
-    if(size==0)
+    if(size==0)                                             //representing 0
     sign=0;
     
     word = (int*) malloc(sizeof(int)*size);
     
     int i , j;
     for(i=0,j=curr ; j<strlen(val) ; i++,j++)
-    word[i] = val[j]-'0';
+    word[i] = val[j]-'0';                                   //convert each character in the input string to number and store in word as a integer
     
     b->sign = sign;
     b->word = word;
