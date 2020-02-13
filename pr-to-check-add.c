@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-
+#include<string.h>
 typedef struct s2
 {
     int sign;
@@ -152,25 +152,65 @@ mpint add(mpint a , mpint b){
     return *c;
 }
 
+void print(mpint c){
+    int i , j , k;
+    if(c.sign==-1)
+    printf("-" );
+    if(c.sign==0)
+    printf("0");
+    for(i = 0 ; i < c.size ; i++)
+    printf("%d",c.word[i] );
+
+    printf("n");
+}
+
+
+mpint str2mpint(char *val){
+    mpint *b = (mpint*)malloc(sizeof(mpint));
+    int sign;
+    int *word;
+    int size;
+
+    int curr = 0;
+
+    if (val[0]=='-')
+    sign=-1;
+    else
+    sign=1;
+
+    if(val[0]=='-' || val[0]=='+')
+    curr++;
+
+    while(val[curr]=='0' && curr<strlen(val))
+    curr++;
+
+    size = strlen(val) - curr;
+
+    if(size==0)
+    sign=0;
+
+    word = (int*) malloc(sizeof(int)*size);
+
+    int i , j;
+    for(i=0,j=curr ; j<strlen(val) ; i++,j++)
+    word[i] = val[j]-'0';
+
+    b->sign = sign;
+    b->word = word;
+    b->size = size;
+    return *b;
+}
 
 void main(){
 	int i;
 	mpint f,g,h;
-	f.sign=1;
-	f.size=1;
-	f.word = (int*)malloc(sizeof(int));
-	f.word[0]=112233;
-
-	g.sign=1;
-	g.size=1;
-	g.word = (int*)malloc(sizeof(int));
-	g.word[0]=220000;
-
+	f=str2mpint("1122");
+	g=str2mpint("2211");
 	h=add(g,f);
-	printf("Addition of %d and %d is :",g.word[0],f.word[0]);
+	
 
-	for(i=0;i<h.size;i++)
-		printf("%d",h.word[i]);
+	print(h);
+
 }
 
 
