@@ -11,14 +11,14 @@ typedef struct s2
 
 int max(int , int);
 
-mpint add(mpint , mpint);
-mpint sub(mpint , mpint);
+mpint add(mpint , mpint);  // checked
+mpint sub(mpint , mpint);  
 mpint mult(mpint , mpint);
 mpint mulbyint(mpint , int);
 mpint mulby10(mpint , int);
 mpint reminder(mpint , mpint);
 int compareword(mpint , mpint);
-void bypass(int** , int*);
+void bypass(int** , int*);  
 mpint *createcopy(mpint *);
 mpint append(mpint , int);
 mpint subnum(mpint , int );
@@ -28,8 +28,8 @@ mpint divby2(mpint);
 mpint expmod(mpint , mpint , mpint);
 mpint genrandom(int);
 mpint inverse(mpint , mpint);
-void copy(mpint* , mpint*);
-void print(mpint );
+void copy(mpint* , mpint*); 
+void print(mpint );  // checked
 
 /**
 * This method is used to find maximum number between two integers.
@@ -50,7 +50,7 @@ int max(int x , int y){
 * like 0045454 to 45454
 */
 
-void bypass(int **wordg , int *len){
+void bypass(int **wordg , int *len){   
     int curr  = 0;
     int size = *len;
     int *word = *wordg;
@@ -188,8 +188,8 @@ mpint add(mpint a , mpint b){
         int x = lena>0 ? a.word[--lena] : 0 ;
         int y = lenb>0 ? b.word[--lenb] : 0 ;
         int z = (x + y + carry)%10;
-        carry = (x + y + carry)/10;
-        word[--len] = z;
+        carry = z/10;
+        word[--len] = z%10;
         
     }
     word[--len]=carry;
@@ -695,7 +695,7 @@ void print(mpint c){
     for(i = 0 ; i < c.size ; i++)
     printf("%d",c.word[i] );
     
-    printf("n");
+    printf("\n");
 }
 
 /**

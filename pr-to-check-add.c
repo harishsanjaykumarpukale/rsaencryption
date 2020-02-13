@@ -161,7 +161,7 @@ void print(mpint c){
     for(i = 0 ; i < c.size ; i++)
     printf("%d",c.word[i] );
 
-    printf("n");
+    printf("\n");
 }
 
 
