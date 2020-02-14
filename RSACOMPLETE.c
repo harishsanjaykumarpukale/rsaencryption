@@ -18,7 +18,7 @@ mpint str2mpint(char *val); //checked
 mpint sub(mpint , mpint);  //checked
 mpint mult(mpint , mpint);
 mpint mulbyint(mpint , int);// checked
-mpint mulby10(mpint , int);
+mpint mulby10(mpint , int);// checked
 int millerrabin(mpint p, int it);
 long long int to_int(mpint b);
 mpint reminder(mpint , mpint); 
