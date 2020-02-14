@@ -16,7 +16,7 @@ int compareword(mpint , mpint); //checked
 mpint *createcopy(mpint *); //checked
 mpint str2mpint(char *val); //checked
 mpint sub(mpint , mpint);  //checked
-mpint mult(mpint , mpint);
+mpint mult(mpint , mpint);// Error
 mpint mulbyint(mpint , int);// checked
 mpint mulby10(mpint , int);// checked
 int millerrabin(mpint p, int it);
