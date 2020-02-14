@@ -23,7 +23,7 @@ int millerrabin(mpint p, int it);
 long long int to_int(mpint b);
 mpint reminder(mpint , mpint); 
 mpint append(mpint , int);
-mpint subnum(mpint , int );
+mpint subnum(mpint , int );//checked
 mpint addmod(mpint , mpint , mpint);
 mpint multmod(mpint, mpint, mpint);
 mpint divby2(mpint);
