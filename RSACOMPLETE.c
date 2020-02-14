@@ -15,7 +15,7 @@ void bypass(int** , int*); //checked
 int compareword(mpint , mpint); //checked
 mpint *createcopy(mpint *); //checked
 mpint str2mpint(char *val); //checked
-mpint sub(mpint , mpint);  
+mpint sub(mpint , mpint);  //checked
 mpint mult(mpint , mpint);
 mpint mulbyint(mpint , int);// checked
 mpint mulby10(mpint , int);
