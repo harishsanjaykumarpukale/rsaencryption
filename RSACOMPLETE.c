@@ -202,8 +202,8 @@ mpint add(mpint a , mpint b){
         int x = lena>0 ? a.word[--lena] : 0 ;
         int y = lenb>0 ? b.word[--lenb] : 0 ;
         int z = (x + y + carry)%10;
-        carry = z/10;
-        word[--len] = z%10;
+        carry = (x+y+carry)/10;
+        word[--len] = z;
         
     }
     word[--len]=carry;
