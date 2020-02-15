@@ -35,7 +35,7 @@ mpint genrandomprime(int len);
 int coprime(mpint a , mpint b);//checked
 void keygen(mpint *n,mpint *e, mpint *d,int size);
 mpint inverse(mpint , mpint); //error
-void copy(mpint* , mpint*); 
+void copy(mpint* , mpint*); //checked
 void print(mpint );  // checked
 
 mpint RSAEncrypt(mpint m , mpint e , mpint n);
