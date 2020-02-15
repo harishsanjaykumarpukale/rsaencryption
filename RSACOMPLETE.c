@@ -25,10 +25,10 @@ mpint reminder(mpint , mpint); //checked
 mpint append(mpint , int);
 mpint subnum(mpint , int );//checked
 mpint addmod(mpint , mpint , mpint);//checked
-mpint multmod(mpint, mpint, mpint);//error
+mpint multmod(mpint, mpint, mpint);             //error
 mpint divby2(mpint);
 mpint divident(mpint divisor , mpint div );
-int mod2(mpint a);
+int mod2(mpint a);//checked
 mpint expmod(mpint , mpint , mpint);
 mpint genrandom(int);
 mpint genrandomprime(int len);
