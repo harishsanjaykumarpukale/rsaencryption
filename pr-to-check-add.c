@@ -284,6 +284,147 @@ mpint mult(mpint a , mpint b){
 
 }
 
+
+mpint subnum(mpint a , int l){
+    mpint *c = (mpint*)malloc(sizeof(mpint));
+    c->size = l;
+    c->sign = a.sign;
+    c->word = (int*) malloc(sizeof(int)*l);
+    int i;
+    for(i = 0 ; i < l ; i++)
+    c->word[i] = a.word[i];
+    return *c;
+}
+
+mpint reminder(mpint a , mpint b){
+
+
+    if(b.sign==0)
+    {
+        printf("Exception case of 0 divisorn");
+        exit(0);
+    }
+    if(a.sign==0)
+    {
+        return a;
+    }
+
+    if (compareword(a,b)==-1){
+
+        return a;
+    }
+    if(compareword(a,b)==0){
+
+        mpint *c = (mpint*)malloc(sizeof(mpint));
+        c->size=0;
+        c->sign =  0 ;
+
+        return *c;
+    }
+
+    int len = b.size;
+
+    mpint t=  subnum(a,len);
+    while(compareword(t,b)==-1){
+        len++;
+        t = subnum(a,len);
+    }
+    int appendzeroes = a.size - len ;
+    t = mulby10(b , appendzeroes);
+    a = sub(a,t);
+    return reminder(a,b);
+}
+
+mpint multmod(mpint a, mpint b, mpint n){
+    return reminder(mult(a,b),n);
+}
+
+
+void copy(mpint *to , mpint *from){
+    to->size = from->size;
+    to->sign = from->sign;
+    free(to->word);
+    to->word = (int*)malloc(sizeof(int)*to->size);
+    int i;
+    for(i = 0 ; i < to->size ; i++)
+    to->word[i] = from->word[i];
+
+}
+
+mpint divby2(mpint a){
+    mpint *c = (mpint*)malloc(sizeof(mpint));
+
+    int len = a.size;
+    int *word = (int*)malloc(sizeof(int)*len);
+    int sign = a.sign;
+    int carry = 0;
+    int i;
+    for(i = 0 ; i < len ; i++){
+        int x = carry*10 + a.word[i];
+        int v = x/2;
+        carry = x%2;
+        word[i]=v;
+    }
+    c->word = word;
+    c->sign = sign;
+    c->size = len;
+    bypass(&c->word , &c->size);
+    return *c;
+}
+
+
+mpint divident(mpint divisor , mpint div ){
+
+    mpint l = str2mpint("1");
+    mpint h = *createcopy(&divisor);
+    mpint rem = reminder(divisor , div);
+    divisor = sub(divisor,rem);
+    mpint ONE = str2mpint("1");
+
+    while(1){
+        mpint mid = divby2(add(l,h));
+        mpint tmp = mult(div , mid);
+        int cmp = compareword( divisor , tmp ) ;
+        if (cmp==0)
+        return mid;
+        else if ( cmp == 1)
+        l = add(mid,ONE);
+        else
+        h = sub(mid,ONE);
+    }
+
+}
+
+mpint inverse(mpint a , mpint n){
+    mpint ONE = str2mpint("1");
+    mpint ZERO = str2mpint("0");
+    mpint t = str2mpint("0");
+    mpint newt = str2mpint("1");
+    mpint newn = *createcopy(&n);
+    mpint newa = *createcopy(&a);
+
+    mpint p_i_2 = str2mpint("0");
+    mpint p_i_1 = str2mpint("1");
+    do{
+        mpint q_i_2 = divident(newn , newa);
+        mpint rem = reminder(newn , newa);
+        mpint p = sub(p_i_2 , reminder( mult(p_i_1,q_i_2), n));
+        if(p.sign==-1){
+            p.sign = 1;
+            mpint tmp = sub( n , p);
+            copy(&p , &tmp);
+
+        }
+
+        copy(&p_i_2 ,&p_i_1 );
+        copy(&p_i_1 , &p );
+        copy(&newn ,&newa );
+        copy(&newa , &rem);
+        if(compareword(rem,ONE)==0)
+        return p;
+    }while(1);
+}
+
 void main(){
 	int i;
 	mpint f,g,h,*x,y;
@@ -322,6 +463,23 @@ void main(){
 	 print(g);
 	 y=mult(f,g);
 	 print(y);
+
+	 f=str2mpint("123456");
+	 g=str2mpint("654321");
+
+	 y=str2mpint("23");
+
+	 h=multmod(f,g,y);
+
+	 print(h);
+
+
+	 f=str2mpint("5");
+         g=str2mpint("47");
+
+	 h=inverse(f,g);
+	 print(h);
+
 }
 
 

@@ -16,7 +16,7 @@ int compareword(mpint , mpint); //checked
 mpint *createcopy(mpint *); //checked
 mpint str2mpint(char *val); //checked
 mpint sub(mpint , mpint);  //checked
-mpint mult(mpint , mpint);                      // Error
+mpint mult(mpint , mpint); //checked
 mpint mulbyint(mpint , int);// checked
 mpint mulby10(mpint , int);// checked
 int millerrabin(mpint p, int it);
@@ -25,17 +25,17 @@ mpint reminder(mpint , mpint); //checked
 mpint append(mpint , int);
 mpint subnum(mpint , int );//checked
 mpint addmod(mpint , mpint , mpint);//checked
-mpint multmod(mpint, mpint, mpint);             //error
-mpint divby2(mpint);
-mpint divident(mpint divisor , mpint div );
+mpint multmod(mpint, mpint, mpint);  //checked
+mpint divby2(mpint);//checked
+mpint divident(mpint divisor , mpint div );//checked
 int mod2(mpint a);//checked
 mpint expmod(mpint , mpint , mpint);
 mpint genrandom(int);
 mpint genrandomprime(int len);
 int coprime(mpint a , mpint b);//checked
 void keygen(mpint *n,mpint *e, mpint *d,int size);
-mpint inverse(mpint , mpint); //error
-void copy(mpint* , mpint*); 
+mpint inverse(mpint , mpint); //checked
+void copy(mpint* , mpint*); //checked
 void print(mpint );  // checked
 
 mpint RSAEncrypt(mpint m , mpint e , mpint n);
