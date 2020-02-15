@@ -9,14 +9,14 @@ typedef struct s2
     int size;
 } mpint;
 
-int max(int , int);  
+int max(int , int);  //checked
 mpint add(mpint , mpint);  // checked
 void bypass(int** , int*); //checked
 int compareword(mpint , mpint); //checked
 mpint *createcopy(mpint *); //checked
 mpint str2mpint(char *val); //checked
 mpint sub(mpint , mpint);  //checked
-mpint mult(mpint , mpint);// Error
+mpint mult(mpint , mpint);                      // Error
 mpint mulbyint(mpint , int);// checked
 mpint mulby10(mpint , int);// checked
 int millerrabin(mpint p, int it);
@@ -34,7 +34,7 @@ mpint genrandom(int);
 mpint genrandomprime(int len);
 int coprime(mpint a , mpint b);//checked
 void keygen(mpint *n,mpint *e, mpint *d,int size);
-mpint inverse(mpint , mpint);
+mpint inverse(mpint , mpint); //error
 void copy(mpint* , mpint*); 
 void print(mpint );  // checked
 
