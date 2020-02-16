@@ -425,6 +425,231 @@ mpint inverse(mpint a , mpint n){
     }while(1);
 }
 
+long long int to_int(mpint b){
+    long long int sum = 0;
+    int i ;
+    for (i = 0; i < b.size ; ++i)
+    {
+        sum = sum*10 + b.word[i] ;
+    }
+    return sum;
+}
+
+int mod2(mpint a){
+
+    int len = a.size;
+    int sign = a.sign;
+    int carry = 0;
+    int i;
+    for(i = 0 ; i < len ; i++){
+        int x = carry*10 + a.word[i];
+        carry = x%2;
+    }
+    return carry;
+}
+
+mpint expmod(mpint m , mpint e , mpint n){
+    mpint ZERO = str2mpint("0");
+    mpint ONE = str2mpint("1");
+
+    if(compareword(e,ONE)==0)
+    return m;
+    if(compareword(e,ZERO)==0)
+    return ONE;
+
+    int r = mod2(e);
+    e = divby2(e);
+
+    mpint tmp = expmod(m , e , n);
+    tmp = multmod(tmp,tmp,n);
+
+    if(r==1)
+    tmp = multmod(tmp,m,n);
+    return tmp;
+}
+
+
+
+mpint genrandom(int bits){
+
+    mpint TWO = str2mpint("2");
+    mpint ONE = str2mpint("1");
+    mpint ZERO = str2mpint("0");
+    mpint pow2 = str2mpint("0");
+
+    mpint sum = str2mpint("0");
+    while(bits--)
+    {
+        int bit = rand()%2;
+
+        if(compareword(pow2,ZERO)==0)
+        pow2=ONE;
+
+        else if(compareword(pow2,ONE)==0)
+        pow2=TWO;
+
+        else pow2 = mult(pow2,TWO);
+
+
+        if(bit==1){
+            sum = add(sum , pow2);
+        }
+
+    }
+    return sum;
+}
+
+
+
+int millerrabin(mpint p, int it){
+
+    mpint TWO = str2mpint("2");
+    mpint ONE = str2mpint("1");
+
+    if(compareword(p, TWO)==-1)
+    return 0;
+
+    if( ( compareword(p,TWO)==0 ) || ( mod2(p)==0 ) )
+    return 0;
+
+    mpint d = sub(p,ONE);
+    int s=0;
+    while(mod2(d)==0){
+        d = divby2(d);
+        s++;
+    }
+
+    witnessloop: do{
+        mpint a = add(reminder( genrandom(100) , sub(p,str2mpint("4")) ), TWO);
+        mpint x = expmod(a , d , p);
+        if( (compareword(x , ONE)==0) || ( compareword(x, sub(p,ONE))==0 ))
+        continue;
+        int i;
+        for(i = 0 ; i < s-1 ; i++){
+            x = multmod(x,x,p);
+            if(compareword(x,ONE)==0)
+            return 0;
+            if(compareword(x,sub(p,ONE))==0)
+            goto witnessloop;
+        }
+        return 0;
+
+    }while(it--);
+    return 1;
+}
+
+
+mpint genrandomprime(int len){
+    mpint PRIME_PRODUCT = str2mpint("152125131763605");
+    mpint ONE = str2mpint("1");
+    mpint TWO = str2mpint("2");
+    mpint ran = genrandom(len);
+
+    if(mod2(ran)==0)
+    ran = add(ran,ONE);
+
+    while(1){
+        mpint rem = reminder(ran ,PRIME_PRODUCT);
+        long long int r = to_int(rem);
+        if ((r%3==0)  || (r%5==0)  || (r%7==0)  || (r%11==0) ||
+        (r%13==0) || (r%17==0) || (r%19==0) || (r%23==0) ||
+        (r%29==0) || (r%31==0) || (r%37==0) || (r%41==0)) {
+
+            ran = add(ran , TWO);
+            continue;
+        }
+        if(millerrabin(ran,2)==1)
+        return ran;
+
+        ran = add(ran,PRIME_PRODUCT);
+
+    }
+    return ran;
+}
+
+
+mpint append(mpint b , int x){
+
+    int *word = (int*)malloc(sizeof(int)*(b.size+1));
+    int i;
+    for(i = 0 ; i < b.size ; i++)
+    word[i] = b.word[i];
+    word[i] = x;
+    b.size++;
+    free(b.word);
+    b.word = word;
+    return b;
+
+}
+
+mpint RSADecrypt(mpint c , mpint d , mpint n){
+    return expmod(c , d, n);
+}
+
+mpint RSAEncrypt(mpint m , mpint e , mpint n){
+    return expmod(m , e, n);
+}
+
+
+int coprime(mpint a , mpint b){
+    while(b.sign!=0){
+        mpint t = b;
+        b = reminder(a,b);
+        a = t;
+    }
+    mpint ONE = str2mpint("1");
+    if (compareword(a,ONE)==0)
+    return 1;
+    else
+    return 0;
+}
+
+
+void keygen(mpint *n,mpint *e, mpint *d,int size){
+    mpint ONE = str2mpint("1");
+    mpint p = genrandomprime(size/2);
+    mpint q = genrandomprime(size/2);
+    *n = mult(p,q);
+    mpint phi = mult(sub(p,ONE), sub(q,ONE));
+    do{
+        *e = reminder(genrandom(256),phi);
+    }while( coprime (phi,*e)!=1);
+    *d = inverse(*e , phi);
+
+}
+
+void testRSA(int size){
+    mpint n , e , d ;
+    printf("generating primes P and Qn");
+    keygen(&n , &e , &d, size);
+    //n=str2mpint("33");
+    //e=str2mpint("7");
+    //d=str2mpint("1");
+
+    printf("\nValue of public key (e , n ) \n");
+    print(e);
+    print(n);
+    printf("\nValue of Private key ( d , n ) \n");
+    print(d);
+    print(n);
+
+    //mpint message = reminder(genrandom(512),n);
+    mpint message = str2mpint("89");
+
+    printf("\nRandom generated messege \n");
+    print(message);
+
+    mpint cipher=RSAEncrypt(message , e , n);
+    printf("\nCipher text \n");
+    print(cipher);
+
+    message = RSADecrypt(cipher , d , n);
+    printf("\nCipher Decrypted\n");
+    print(message);
+}
+
+
+
 void main(){
 	int i;
 	mpint f,g,h,*x,y;
@@ -479,6 +704,31 @@ void main(){
 
 	 h=inverse(f,g);
 	 print(h);
+
+	 h=genrandomprime(100);
+	 print(h);
+
+	 i=123;
+	 f=str2mpint("4567330999");
+	 h=append(f,i);
+	 print(h);
+
+
+	 f=str2mpint("47");
+	 g=str2mpint("78");
+	 h=str2mpint("23");
+
+	 y=expmod(f,g,h);
+	 print(y);
+
+	 f=str2mpint("3057601");
+	 i=99908;
+	 i=millerrabin(f,i);
+	 printf("\n%d\n \n TEst function caliing\n",i);
+
+
+	 testRSA(512);
+
 
 }
 

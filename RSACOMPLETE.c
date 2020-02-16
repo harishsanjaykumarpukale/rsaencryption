@@ -19,17 +19,17 @@ mpint sub(mpint , mpint);  //checked
 mpint mult(mpint , mpint); //checked
 mpint mulbyint(mpint , int);// checked
 mpint mulby10(mpint , int);// checked
-int millerrabin(mpint p, int it);
-long long int to_int(mpint b);
+int millerrabin(mpint p, int it);//checked
+long long int to_int(mpint b);  //checked
 mpint reminder(mpint , mpint); //checked
-mpint append(mpint , int);
+mpint append(mpint , int); //checkedt
 mpint subnum(mpint , int );//checked
 mpint addmod(mpint , mpint , mpint);//checked
 mpint multmod(mpint, mpint, mpint);  //checked
 mpint divby2(mpint);//checked
 mpint divident(mpint divisor , mpint div );//checked
 int mod2(mpint a);//checked
-mpint expmod(mpint , mpint , mpint);
+mpint expmod(mpint , mpint , mpint);//checked
 mpint genrandom(int);
 mpint genrandomprime(int len);
 int coprime(mpint a , mpint b);//checked
@@ -839,25 +839,25 @@ void testRSA(int size){
     printf("generating primes P and Qn");
     keygen(&n , &e , &d, size);
     
-    printf("nnValue of public key (e , n ) n");
+    printf("\nnValue of public key (e , n ) \n");
     print(e);
     print(n);
-    printf("nnValue of Private key ( d , n ) n");
+    printf("\nnValue of Private key ( d , n ) \n");
     print(d);
     print(n);
     
     //mpint message = reminder(genrandom(512),n);
     mpint message = str2mpint("123456789");
     
-    printf("nnRandom generated messege n");
+    printf("\nnRandom generated messege \n");
     print(message);
     
     mpint cipher=RSAEncrypt(message , e , n);
-    printf("nnCipher text n");
+    printf("\nnCipher text \n");
     print(cipher);
     
     message = RSADecrypt(cipher , d , n);
-    printf("nnCipher Decryptedn");
+    printf("\nnCipher Decrypted\n");
     print(message);
 }
 
