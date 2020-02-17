@@ -30,7 +30,7 @@ mpint divby2(mpint);//checked
 mpint divident(mpint divisor , mpint div );//checked
 int mod2(mpint a);//checked
 mpint expmod(mpint , mpint , mpint);//checked
-mpint genrandom(int);
+mpint genrandom(int);// gives output but pls once analyse the characteristic of rand() function
 mpint genrandomprime(int len);
 int coprime(mpint a , mpint b);//checked
 void keygen(mpint *n,mpint *e, mpint *d,int size);
