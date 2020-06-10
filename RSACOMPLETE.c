@@ -9,57 +9,45 @@ typedef struct s2
     int size;
 } mpint;
 
-int max(int , int);  //checked
-mpint add(mpint , mpint);  // checked
-void bypass(int** , int*); //checked
-int compareword(mpint , mpint); //checked
-mpint *createcopy(mpint *); //checked
-mpint str2mpint(char *val); //checked
-mpint sub(mpint , mpint);  //checked
-mpint mult(mpint , mpint); //checked
-mpint mulbyint(mpint , int);// checked
-mpint mulby10(mpint , int);// checked
-int millerrabin(mpint p, int it);//checked
-long long int to_int(mpint b);  //checked
-mpint reminder(mpint , mpint); //checked
-mpint append(mpint , int); //checkedt
-mpint subnum(mpint , int );//checked
-mpint addmod(mpint , mpint , mpint);//checked
-mpint multmod(mpint, mpint, mpint);  //checked
-mpint divby2(mpint);//checked
-mpint divident(mpint divisor , mpint div );//checked
-int mod2(mpint a);//checked
-mpint expmod(mpint , mpint , mpint);//checked
-mpint genrandom(int);// gives output but pls once analyse the characteristic of rand() function
+int max(int , int);  
+mpint add(mpint , mpint);  
+void bypass(int** , int*); 
+int compareword(mpint , mpint); 
+mpint *createcopy(mpint *); 
+mpint str2mpint(char *val); 
+mpint sub(mpint , mpint); 
+mpint mult(mpint , mpint); 
+mpint mulbyint(mpint , int);
+mpint mulby10(mpint , int);
+int millerrabin(mpint p, int it);
+long long int to_int(mpint b);  
+mpint reminder(mpint , mpint); 
+mpint append(mpint , int); 
+mpint subnum(mpint , int );
+mpint addmod(mpint , mpint , mpint);
+mpint multmod(mpint, mpint, mpint);  
+mpint divby2(mpint);
+mpint divident(mpint divisor , mpint div );
+int mod2(mpint a);
+mpint expmod(mpint , mpint , mpint);
+mpint genrandom(int);
 mpint genrandomprime(int len);
-int coprime(mpint a , mpint b);//checked
+int coprime(mpint a , mpint b);
 void keygen(mpint *n,mpint *e, mpint *d,int size);
-mpint inverse(mpint , mpint); //checked
-void copy(mpint* , mpint*); //checked
-void print(mpint );  // checked
+mpint inverse(mpint , mpint); 
+void copy(mpint* , mpint*); 
+void print(mpint );  
 mpint RSAEncrypt(mpint m , mpint e , mpint n);
 mpint RSADecrypt(mpint c , mpint d , mpint n);
 void testRSA(int size);
 
-/**
-* This method is used to find maximum number between two integers.
-* @param x This is the first paramter to max method
-* @param y  This is the second parameter to max method
-* @return int This returns maximum of x and y.
-*/
-
+//return maximum of x and y
 int max(int x , int y){
-    return x > y ? x : y ;         //checked
+    return x > y ? x : y ;    
 }
 
-/**
-* This method is used to remove preindexed zero from number.
-* @param word This is the first paramter to bypass method
-* @param len This is the second parameter to bypass method
-* @return void This function just removes leading zero from number.
-* like 0045454 to 45454
-*/
 
+//Used to remove the leading zeroes. Eg: 009875->9875
 void bypass(int **wordg , int *len){   
     int curr  = 0;
     int size = *len;
@@ -77,16 +65,11 @@ void bypass(int **wordg , int *len){
     
 }
 
-/**
-* This method is used to compare two mpint variable.
-* @param a This is the first paramter to compareword method
-* @param b This is the second parameter to compareword method
-* @return int This function compare two mpint variable according to the sign of the variable and return 0,1,-1
-* @return 0:- if both the variable is having sign 0
-* @return 1:- if a is greater than b
-* @return -1:- if a is less than b
-*/
 
+/*Used to compare two mpint variable according to their sign. 
+return 0:- if both the variable is having sign 0
+return 1:- if a is greater than b
+return -1:- if a is less than b*/
 int compareword(mpint a , mpint b){
     if(a.sign==0 && b.sign==0)
     return 0;
@@ -97,7 +80,7 @@ int compareword(mpint a , mpint b){
     return -1;
     
     int i = 0;
-    for(i = 0 ; i < a.size ; i++)        //checked
+    for(i = 0 ; i < a.size ; i++)    
     {
         if (a.word[i] > b.word[i])
         return 1;
@@ -108,12 +91,8 @@ int compareword(mpint a , mpint b){
     return 0;
 }
 
-/**
-* This method is used to create copy of one mpint variable to another mpint variable.
-* @param x This is the first paramter to createcopy method
-* @return mpint This function creates copy of variable
-*/
 
+//Used to copy one mpint variable to another mpint variable and return it.
 mpint* createcopy(mpint *x){
     mpint *b = (mpint*)malloc(sizeof(mpint));
     b->sign = x->sign;
@@ -126,14 +105,10 @@ mpint* createcopy(mpint *x){
     return b;
 }
 
-/**
-* This method is used to create structure variable according to the passed value.
-* @param val This is the first paramter to create method
-* @return mpint This function creates structure variable according to the sign of passed value and converts character to integer
-*/
 
 
-//checked
+
+//Creates and mpint variable by taking string value of it
 mpint str2mpint(char *val){
     mpint *b = (mpint*)malloc(sizeof(mpint));   //pointer of type mpint
     int sign;
@@ -170,13 +145,8 @@ mpint str2mpint(char *val){
     return *b;
 }
 
-/**
-* This method is used to add two structure variable according to the sign of the variable.
-* @param a This is the first paramter to add method
-* @param b This is the second paramter to add method
-* @return mpint This function is used to add two structure variable according to the sign.
-*/
 
+//Adds two mpint variables with sign
 mpint add(mpint a , mpint b){
     if(b.sign==0)
     return a;
@@ -216,12 +186,7 @@ mpint add(mpint a , mpint b){
     return *c;
 }
 
-/**
-* This method is used to substract two structure variable according to the sign of the variable.
-* @param a This is the first paramter to sub method
-* @param b This is the second paramter to sub method
-* @return mpint This function is used to substract two structure variable according to the sign.
-*/
+//Subtracts two mpint variables with sign
 mpint sub(mpint a , mpint b){
     
     if(b.sign==0)
@@ -339,12 +304,8 @@ mpint mulbyint(mpint a , int x){
     return *b;
 }
 
-/**
-* This method is used to multiply two structure variable.
-* @param a This is the first paramter to mul method
-* @param b This is the second paramter to mul method
-* @return mpint This function is used to multiply two structure variable.
-*/
+
+//Multiply two mpint variables with sign
 mpint mult(mpint a , mpint b){
     if(a.sign==0)
     return a;
@@ -861,7 +822,7 @@ void testRSA(int size){
     print(message);
 }
 
-// main function to call the above utility functions.
+
 
 int main(){
     testRSA(512);
